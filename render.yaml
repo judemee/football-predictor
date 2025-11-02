@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: football-predictor
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: CSV_URL
+        value: https://docs.google.com/spreadsheets/d/e/2PACX-1vRIpvfzyZL9O86efs8m20qxAISHTeBm89zC7MOH19xjERyNFhC-xF2r3vJAC_jJzh-L9IuqLiLL0Fi-/pub?output=csv
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false

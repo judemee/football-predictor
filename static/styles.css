@@ -1,0 +1,268 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0a1128;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 30px;
+}
+
+h1 {
+    color: #4cc9f0;
+}
+
+.controls {
+    margin: 20px auto;
+}
+
+.controls input {
+    padding: 10px;
+    width: 50%;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    background: #3a86ff;
+    color: white;
+    padding: 10px 15px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #4361ee;
+}
+
+/* === Improved Team Card Styling for Readability === */
+.team-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+  color: #f5f7fa;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  transition: all 0.25s ease;
+}
+
+.team-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.team-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.3px;
+}
+
+.team-card p {
+  font-size: 0.85rem;
+  color: #d0d7e3;
+  line-height: 1.4;
+  margin: 0.25rem 0;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .team-card {
+    padding: 0.8rem;
+  }
+
+  .team-card h3 {
+    font-size: 0.95rem;
+  }
+
+  .team-card p {
+    font-size: 0.8rem;
+  }
+}
+
+
+.teams {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.team-card {
+    background: #1b264f;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+.predict {
+    margin-top: 30px;
+    background: #162447;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.predict select {
+    padding: 8px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.result-box {
+    margin-top: 20px;
+    background: #1b264f;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+footer {
+    margin-top: 50px;
+    text-align: center;
+    color: #aaa;
+    padding: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .teams {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .teams {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .controls input {
+        width: 90%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .teams {
+        grid-template-columns: 1fr;
+    }
+
+    .controls input {
+        width: 100%;
+    }
+}
+
+/* --- Modal --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #0b1220;
+  color: #fff;
+  border-radius: 16px;
+  padding: 25px 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+/* Performance bar */
+.performance-bar {
+  background: #222;
+  height: 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+#performanceFill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ff4c4c, #ffcc00, #1fd655);
+  border-radius: 6px;
+  transition: width 0.6s ease;
+}
+
+.search-box {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+mark {
+  background-color: #ffeb3b;
+  color: #000;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.search-box {
+  width: 60%;
+  max-width: 500px;
+  margin: 10px auto 25px auto;
+  display: block;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+}
+
+
+
