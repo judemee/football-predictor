@@ -26,12 +26,32 @@
     <!-- Match Prediction Section -->
     <section class="predict card">
       <h3>Predict a Match</h3>
-      <select id="teamA"></select>
-      <select id="teamB"></select>
-      <button id="predictBtn">Predict Result</button>
-      <div id="predictionResult" class="result-box"></div>
-    </section>
 
+      <div class="predict-row">
+        <!-- Team A -->
+        <div class="team-select">
+          <label>Team A:</label>
+          <div class="select-wrapper">
+            <select id="teamA"></select>
+            <button id="searchA">🔍</button>
+          </div>
+        </div>
+
+        <!-- Team B -->
+        <div class="team-select">
+          <label>Team B:</label>
+          <div class="select-wrapper">
+            <select id="teamB"></select>
+            <button id="searchB">🔍</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="predict-action">
+        <button id="predictBtn">Predict Result</button>
+        <div id="predictionResult" class="result-box"></div>
+      </div>
+    </section>
     <!-- Teams Display -->
     <section class="teams-section">
       <h2>Teams</h2>
@@ -50,196 +70,305 @@
       </div>
     </div>
 
-    <footer class="footer">Built with ❤ by Jude</footer>
+    <footer class="footer">Built with ❤ by OJ Evolve</footer>
   </main>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
 
-  // ---- Helper for API ----
-  async function api(path, opts) {
-    const res = await fetch(path, opts);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  }
+  <!-- Team A Modal -->
+  <div id="teamSearchModalA" class="modal hidden">
+    <div class="modal-content">
+      <input type="text" id="teamSearchInputA" placeholder="Search Team A..." />
+      <ul id="teamListA"></ul>
+    </div>
+  </div>
 
-  // ---- DOM references ----
-  const loadBtn = document.getElementById("loadBtn");
-  const predictBtn = document.getElementById("predictBtn");
-  const teamsGrid = document.getElementById("teamsGrid");
-  const teamASelect = document.getElementById("teamA");
-  const teamBSelect = document.getElementById("teamB");
-  const spreadsheetUrlInput = document.getElementById("spreadsheetUrl");
-  const predictionResult = document.getElementById("predictionResult");
-  const searchInput = document.getElementById("teamSearch");
+  <!-- Team B Modal -->
+  <div id="teamSearchModalB" class="modal hidden">
+    <div class="modal-content">
+      <input type="text" id="teamSearchInputB" placeholder="Search Team B..." />
+      <ul id="teamListB"></ul>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
 
-  let allTeams = [];
-
-  // ---- Load Teams ----
-  async function loadTeams() {
-    teamsGrid.innerHTML = "Loading teams...";
-    const url = spreadsheetUrlInput.value.trim();
-
-    try {
-      const data = await api("/api/load?csv_url=" + encodeURIComponent(url));
-      if (!data.teams || data.teams.length === 0) {
-        teamsGrid.innerHTML = '<div class="error">No teams found.</div>';
-        return;
+      // ---- Helper for API ----
+      async function api(path, opts) {
+        const res = await fetch(path, opts);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
       }
-      allTeams = data.teams;
-      renderTeams(data.teams);
-      populateSelects(data.teams);
-    } catch (e) {
-      console.error(e);
-      teamsGrid.innerHTML = `<div class="error">Failed to load: ${e.message}</div>`;
-    }
-  }
 
-  // ---- Highlight Search Term ----
-  function highlightMatch(text, term) {
-    if (!term) return text;
-    const regex = new RegExp(`(${term})`, "gi");
-    return text.replace(regex, `<mark style="background:none;color:#fff;font-weight:bold;">$1</mark>`);
-  }
+      // ---- DOM references ----
+      const loadBtn = document.getElementById("loadBtn");
+      const predictBtn = document.getElementById("predictBtn");
+      const teamsGrid = document.getElementById("teamsGrid");
+      const teamASelect = document.getElementById("teamA");
+      const teamBSelect = document.getElementById("teamB");
+      const spreadsheetUrlInput = document.getElementById("spreadsheetUrl");
+      const predictionResult = document.getElementById("predictionResult");
+      const searchInput = document.getElementById("teamSearch");
 
-  // ---- Color by performance ----
-  function performanceStyle(team) {
-    if (!team.played || team.played <= 0) {
-      return { bg: "rgba(255,255,255,0.05)", color: "#aaa" };
-    }
+      let allTeams = [];
 
-    const ratio = team.wins / team.played;
-    if (ratio >= 0.6)
-      return { bg: "linear-gradient(145deg, rgba(0,255,128,0.12), rgba(0,128,64,0.05))", color: "#00ff80" };
-    if (ratio >= 0.3)
-      return { bg: "linear-gradient(145deg, rgba(255,165,0,0.12), rgba(128,64,0,0.05))", color: "#ffae42" };
-    return { bg: "linear-gradient(145deg, rgba(255,64,64,0.12), rgba(128,0,0,0.05))", color: "#ff4c4c" };
-  }
+      // ---- Load Teams ----
+      async function loadTeams() {
+        teamsGrid.innerHTML = "Loading teams...";
+        const url = spreadsheetUrlInput.value.trim();
 
-  // ---- Display Teams ----
-  function displayTeams(teams, term = "") {
-    teamsGrid.innerHTML = "";
-    if (!teams.length) {
-      teamsGrid.innerHTML = '<p style="text-align:center;opacity:0.6;">No teams found.</p>';
-      return;
-    }
+        try {
+          const data = await api("/api/load?csv_url=" + encodeURIComponent(url));
+          if (!data.teams || data.teams.length === 0) {
+            teamsGrid.innerHTML = '<div class="error">No teams found.</div>';
+            return;
+          }
+          allTeams = data.teams;
+          renderTeams(data.teams);
+          populateSelects(data.teams);
+        } catch (e) {
+          console.error(e);
+          teamsGrid.innerHTML = `<div class="error">Failed to load: ${e.message}</div>`;
+        }
+      }
 
-    teams.forEach((t) => {
-      const el = document.createElement("div");
-      const perf = performanceStyle(t);
-      el.className = "team-card";
-      el.style.background = perf.bg;
-      el.innerHTML = `
+      // ---- Highlight Search Term ----
+      function highlightMatch(text, term) {
+        if (!term) return text;
+        const regex = new RegExp(`(${term})`, "gi");
+        return text.replace(regex, `<mark style="background:none;color:#fff;font-weight:bold;">$1</mark>`);
+      }
+
+      // ---- Color by performance ----
+      function performanceStyle(team) {
+        if (!team.played || team.played <= 0) {
+          return { bg: "rgba(255,255,255,0.05)", color: "#aaa" };
+        }
+
+        const ratio = team.wins / team.played;
+        if (ratio >= 0.6)
+          return { bg: "linear-gradient(145deg, rgba(0,255,128,0.12), rgba(0,128,64,0.05))", color: "#00ff80" };
+        if (ratio >= 0.3)
+          return { bg: "linear-gradient(145deg, rgba(255,165,0,0.12), rgba(128,64,0,0.05))", color: "#ffae42" };
+        return { bg: "linear-gradient(145deg, rgba(255,64,64,0.12), rgba(128,0,0,0.05))", color: "#ff4c4c" };
+      }
+
+      // ---- Display Teams ----
+      function displayTeams(teams, term = "") {
+        teamsGrid.innerHTML = "";
+        if (!teams.length) {
+          teamsGrid.innerHTML = '<p style="text-align:center;opacity:0.6;">No teams found.</p>';
+          return;
+        }
+
+        teams.forEach((t) => {
+          const el = document.createElement("div");
+          const perf = performanceStyle(t);
+          el.className = "team-card";
+          el.style.background = perf.bg;
+          el.innerHTML = `
         <h3>${highlightMatch(t.team, term)}</h3>
         <p>Matches: ${t.played} · W:${t.wins} D:${t.draws} L:${t.losses}</p>
         <p>GF:${t.goals_for} GA:${t.goals_against} GD:${t.goal_diff}</p>
         <p style="color:${perf.color};font-weight:600;">Points: ${t.points ?? "N/A"}</p>
       `;
-      el.addEventListener("click", () => openModal(t));
-      teamsGrid.appendChild(el);
-    });
-  }
+          el.addEventListener("click", () => openModal(t));
+          teamsGrid.appendChild(el);
+        });
+      }
 
-  function renderTeams(teams) {
-    displayTeams(teams);
-  }
+      function renderTeams(teams) {
+        displayTeams(teams);
+      }
 
-  // ---- Search Filtering ----
-  let searchTimeout = null;
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        const term = e.target.value.trim().toLowerCase();
-        const filtered = allTeams.filter((t) => t.team.toLowerCase().includes(term));
-        displayTeams(filtered, term);
-      }, 250);
-    });
-  }
+      // ---- Search Filtering ----
+      let searchTimeout = null;
+      if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            const term = e.target.value.trim().toLowerCase();
+            const filtered = allTeams.filter((t) => t.team.toLowerCase().includes(term));
+            displayTeams(filtered, term);
+          }, 250);
+        });
+      }
 
-  // ---- Modal Logic ----
-  function openModal(team) {
-    const modal = document.getElementById("teamModal");
-    const modalTeamName = document.getElementById("modalTeamName");
-    const modalStats = document.getElementById("modalStats");
-    const performanceFill = document.getElementById("performanceFill");
+      // ---- Modal Logic ----
+      // ---- Modal Logic for Team Detail ----
+      function openModal(team) {
+        const modal = document.getElementById("teamModal");
+        const modalTeamName = document.getElementById("modalTeamName");
+        const modalStats = document.getElementById("modalStats");
+        const performanceFill = document.getElementById("performanceFill");
 
-    if (!modal || !modalTeamName || !modalStats || !performanceFill) return;
+        if (!modal || !modalTeamName || !modalStats || !performanceFill) return;
 
-    modalTeamName.textContent = team.team;
-    modalStats.innerHTML = `
-      <p><strong>Matches:</strong> ${team.played}</p>
-      <p><strong>Wins:</strong> ${team.wins}</p>
-      <p><strong>Draws:</strong> ${team.draws}</p>
-      <p><strong>Losses:</strong> ${team.losses}</p>
-      <p><strong>GF:</strong> ${team.goals_for} — <strong>GA:</strong> ${team.goals_against}</p>
-      <p><strong>GD:</strong> ${team.goal_diff}</p>
-    `;
+        modalTeamName.textContent = team.team;
+        modalStats.innerHTML = `
+    <p><strong>Matches:</strong> ${team.played}</p>
+    <p><strong>Wins:</strong> ${team.wins}</p>
+    <p><strong>Draws:</strong> ${team.draws}</p>
+    <p><strong>Losses:</strong> ${team.losses}</p>
+    <p><strong>GF:</strong> ${team.goals_for} — <strong>GA:</strong> ${team.goals_against}</p>
+    <p><strong>GD:</strong> ${team.goal_diff}</p>
+  `;
 
-    const performance = team.played > 0 ? (team.wins / team.played) * 100 : 0;
-    performanceFill.style.width = `${performance}%`;
-    modal.classList.remove("hidden");
-  }
+        const performance = team.played > 0 ? (team.wins / team.played) * 100 : 0;
+        performanceFill.style.width = `${performance}%`;
+        modal.classList.remove("hidden");
+      }
 
-  const modal = document.getElementById("teamModal");
-  const closeModalBtn = document.getElementById("closeModal");
-  if (modal && closeModalBtn) {
-    closeModalBtn.addEventListener("click", () => modal.classList.add("hidden"));
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) modal.classList.add("hidden");
-    });
-  }
+      // ---- Close button for team detail modal ----
+      (function setupTeamModalClose() {
+        const modal = document.getElementById("teamModal");
+        const closeBtn = document.getElementById("closeModal");
 
-  // ---- Populate dropdowns ----
-  function populateSelects(teams) {
-    teamASelect.innerHTML = '<option value="">Select team A</option>';
-    teamBSelect.innerHTML = '<option value="">Select team B</option>';
-    teams.forEach((t) => {
-      const option = new Option(t.team, t.team);
-      teamASelect.add(option.cloneNode(true));
-      teamBSelect.add(option.cloneNode(true));
-    });
-  }
+        if (!modal || !closeBtn) return;
 
-  // ---- Prediction ----
-  predictBtn.addEventListener("click", async () => {
-    const teamA = teamASelect.value;
-    const teamB = teamBSelect.value;
+        closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) modal.classList.add("hidden");
+        });
 
-    if (!teamA || !teamB || teamA === teamB) {
-      predictionResult.textContent = "⚠️ Choose two different teams.";
-      return;
-    }
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+            modal.classList.add("hidden");
+          }
+        });
+      })();
 
-    predictionResult.textContent = "Predicting...";
+      // === Universal modal close behavior for Team A & B search ===
+      function enableModalAutoClose(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
 
-    try {
-      const res = await api("/api/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          teamA,
-          teamB,
-          csv_url: spreadsheetUrlInput.value.trim(),
-        }),
-      });
+        modal.addEventListener("click", (e) => {
+          const content = modal.querySelector(".modal-content");
 
-      predictionResult.innerHTML = `
+          // ✅ Close modal if user clicks directly on the overlay (not inside modal box)
+          if (e.target === modal || !content.contains(e.target)) {
+            modal.classList.add("hidden");
+          }
+        });
+
+        // ✅ Allow Esc key to close
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+            modal.classList.add("hidden");
+          }
+        });
+      }
+
+
+      // ✅ Apply to both Team A & Team B search modals
+      enableModalAutoClose("teamSearchModalA");
+      enableModalAutoClose("teamSearchModalB");
+
+
+      // ---- Populate dropdowns ----
+      function populateSelects(teams) {
+        teamASelect.innerHTML = '<option value="">Select team A</option>';
+        teamBSelect.innerHTML = '<option value="">Select team B</option>';
+        teams.forEach((t) => {
+          const option = new Option(t.team, t.team);
+          teamASelect.add(option.cloneNode(true));
+          teamBSelect.add(option.cloneNode(true));
+        });
+      }
+
+      // ---- Prediction ----
+      predictBtn.addEventListener("click", async () => {
+        const teamA = teamASelect.value;
+        const teamB = teamBSelect.value;
+
+        if (!teamA || !teamB || teamA === teamB) {
+          predictionResult.textContent = "⚠️ Choose two different teams.";
+          return;
+        }
+
+        predictionResult.textContent = "Predicting...";
+
+        try {
+          const res = await api("/api/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              teamA,
+              teamB,
+              csv_url: spreadsheetUrlInput.value.trim(),
+            }),
+          });
+
+          predictionResult.innerHTML = `
         <strong>${res.predicted}</strong><br>
         🏠 Home: ${(res.probs.home * 100).toFixed(1)}% |
         ⚖️ Draw: ${(res.probs.draw * 100).toFixed(1)}% |
         🚀 Away: ${(res.probs.away * 100).toFixed(1)}%
       `;
-    } catch (e) {
-      predictionResult.textContent = "Prediction failed: " + e.message;
-    }
-  });
+        } catch (e) {
+          predictionResult.textContent = "Prediction failed: " + e.message;
+        }
+      });
 
-  // ---- Event listeners ----
-  loadBtn.addEventListener("click", loadTeams);
-  window.addEventListener("load", loadTeams);
+      // ---- Search buttons for team inputs ----
+      // ---- Enhanced Search buttons for team inputs ----
+      function openTeamSearch(which) {
+        const modal = document.createElement('div');
+        modal.className = 'team-search-modal';
+        modal.innerHTML = `
+    <div class="team-search-box">
+      <input type="text" id="teamSearchInput" placeholder="Search ${which === 'A' ? 'Team A' : 'Team B'}...">
+      <ul id="teamSearchResults"></ul>
+      <button id="closeSearch">Close</button>
+    </div>
+  `;
+        document.body.appendChild(modal);
 
-}); // DOMContentLoaded end
-</script>
+        const input = modal.querySelector('#teamSearchInput');
+        const results = modal.querySelector('#teamSearchResults');
+        const closeBtn = modal.querySelector('#closeSearch');
+
+        function renderResults(term = '') {
+          results.innerHTML = '';
+          const filtered = allTeams.filter(t =>
+            t.team.toLowerCase().includes(term.toLowerCase())
+          );
+          filtered.forEach(t => {
+            const li = document.createElement('li');
+            li.textContent = t.team;
+            li.addEventListener('click', () => {
+              if (which === 'A') teamASelect.value = t.team;
+              else teamBSelect.value = t.team;
+              modal.remove();
+            });
+            results.appendChild(li);
+          });
+        }
+
+        input.addEventListener('input', e => renderResults(e.target.value));
+        closeBtn.addEventListener('click', () => modal.remove());
+        renderResults();
+        input.focus();
+      }
+
+      document.getElementById('searchA').addEventListener('click', () => openTeamSearch('A'));
+      document.getElementById('searchB').addEventListener('click', () => openTeamSearch('B'));
+
+      document.addEventListener("click", e => {
+        if (e.target.matches("button, #loadBtn, #predictBtn, .select-wrapper button")) {
+          const rect = e.target.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          e.target.style.setProperty("--ripple-x", `${x}px`);
+          e.target.style.setProperty("--ripple-y", `${y}px`);
+        }
+      });
+
+      // ---- Event listeners ----
+      loadBtn.addEventListener("click", loadTeams);
+      window.addEventListener("load", loadTeams);
+
+    }); // DOMContentLoaded end
+  </script>
 
 
 </body>

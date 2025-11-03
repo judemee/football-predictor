@@ -1,46 +1,47 @@
+/* ====== Base Styles ====== */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #0a1128;
-    color: #fff;
-    margin: 0;
-    padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0a1128;
+  color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    text-align: center;
-    padding: 30px;
+  text-align: center;
+  padding: 30px;
 }
 
 h1 {
-    color: #4cc9f0;
-}
-
-.controls {
-    margin: 20px auto;
-}
-
-.controls input {
-    padding: 10px;
-    width: 50%;
-    border-radius: 8px;
-    border: none;
+  color: #4cc9f0;
 }
 
 button {
-    background: #3a86ff;
-    color: white;
-    padding: 10px 15px;
-    margin-left: 5px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  background: #3a86ff;
+  color: white;
+  padding: 10px 15px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-
 button:hover {
-    background: #4361ee;
+  background: #4361ee;
 }
 
-/* === Improved Team Card Styling for Readability === */
+/* ====== Controls ====== */
+.controls {
+  margin: 20px auto;
+}
+.controls input {
+  padding: 10px;
+  width: 50%;
+  border-radius: 8px;
+  border: none;
+}
+
+/* ====== Team Cards ====== */
 .team-card {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -49,33 +50,24 @@ button:hover {
   text-align: center;
   color: #f5f7fa;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
   transition: all 0.25s ease;
 }
-
 .team-card:hover {
   background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
-
 .team-card h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #fff;
   margin-bottom: 0.4rem;
-  letter-spacing: 0.3px;
 }
-
 .team-card p {
   font-size: 0.85rem;
   color: #d0d7e3;
-  line-height: 1.4;
   margin: 0.25rem 0;
 }
-
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -83,94 +75,97 @@ button:hover {
   margin-top: 1rem;
 }
 
-@media (max-width: 600px) {
-  .team-card {
-    padding: 0.8rem;
-  }
-
-  .team-card h3 {
-    font-size: 0.95rem;
-  }
-
-  .team-card p {
-    font-size: 0.8rem;
-  }
-}
-
-
-.teams {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.team-card {
-    background: #1b264f;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.1);
-}
-
+/* ====== Prediction Section ====== */
 .predict {
-    margin-top: 30px;
-    background: #162447;
-    padding: 20px;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 30px;
+  background: #162447;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.predict select {
-    padding: 8px;
-    margin: 10px;
-    border-radius: 5px;
-    border: none;
+.predict-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.team-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-wrapper select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #111;
+  color: #fff;
+  min-width: 180px;
+}
+
+.search-btn, .select-wrapper button {
+  background: #00ff80;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+}
+.search-btn:hover, .select-wrapper button:hover {
+  background: #00cc66;
+}
+
+.predict-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#predictBtn {
+  background: #00ff80;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#predictBtn:hover {
+  background: #00cc66;
 }
 
 .result-box {
-    margin-top: 20px;
-    background: #1b264f;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 18px;
+  background: rgba(255,255,255,0.05);
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  min-width: 250px;
+  text-align: center;
+  margin-top: 10px;
 }
 
-footer {
-    margin-top: 50px;
-    text-align: center;
-    color: #aaa;
-    padding: 10px;
-}
-
-/* Responsive Design */
-@media (max-width: 992px) {
-    .teams {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .teams {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .controls input {
-        width: 90%;
-        margin-bottom: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .teams {
-        grid-template-columns: 1fr;
-    }
-
-    .controls input {
-        width: 100%;
-    }
-}
-
-/* --- Modal --- */
-.modal {
+/* ====== Modals ====== */
+.modal,
+.team-search-modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.7);
@@ -178,14 +173,13 @@ footer {
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  transition: opacity 0.3s ease;
 }
-
-.modal.hidden {
+.modal.hidden,
+.team-search-modal.hidden {
   display: none;
 }
-
-.modal-content {
+.modal-content,
+.team-search-box {
   background: #0b1220;
   color: #fff;
   border-radius: 16px;
@@ -195,6 +189,13 @@ footer {
   text-align: center;
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   position: relative;
+}
+.team-search-box {
+  background: #1a1a1a;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 0 15px rgba(0,255,128,0.2);
 }
 
 .close-btn {
@@ -206,12 +207,45 @@ footer {
   color: #ccc;
   transition: color 0.2s;
 }
-
 .close-btn:hover {
   color: #fff;
 }
 
-/* Performance bar */
+.team-search-box input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+}
+
+.team-search-box ul {
+  list-style: none;
+  margin-top: 10px;
+  padding: 0;
+}
+.team-search-box li {
+  padding: 6px 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+}
+.team-search-box li:hover {
+  background: #00ff8055;
+}
+.team-search-box button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 8px;
+  background: #00ff8055;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ====== Performance Bar ====== */
 .performance-bar {
   background: #222;
   height: 12px;
@@ -219,7 +253,6 @@ footer {
   margin-top: 10px;
   overflow: hidden;
 }
-
 #performanceFill {
   height: 100%;
   width: 0;
@@ -228,33 +261,11 @@ footer {
   transition: width 0.6s ease;
 }
 
-.search-box {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.search-box:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
-  outline: none;
-}
-
-mark {
-  background-color: #ffeb3b;
-  color: #000;
-  padding: 0 2px;
-  border-radius: 3px;
-}
-
+/* ====== Search Input ====== */
 .search-box {
   width: 60%;
   max-width: 500px;
-  margin: 10px auto 25px auto;
+  margin: 10px auto 25px;
   display: block;
   padding: 10px 15px;
   border-radius: 10px;
@@ -263,6 +274,203 @@ mark {
   color: white;
   font-size: 1rem;
 }
+.search-box:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
 
+/* ====== Footer ====== */
+footer {
+  margin-top: 50px;
+  text-align: center;
+  color: #aaa;
+  padding: 10px;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 992px) {
+  .teams-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .teams-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .controls input {
+    width: 90%;
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 480px) {
+  .teams-grid {
+    grid-template-columns: 1fr;
+  }
+  .controls input {
+    width: 100%;
+  }
+}
+
+/* === Unified Modern Blue Style for All Interactive Elements === */
+button,
+.select-wrapper button,
+#predictBtn,
+#loadBtn,
+.select-wrapper select {
+  background: #4a90ff;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === Dynamic Ripple Effect (click-based) === */
+button::after,
+.select-wrapper button::after,
+#predictBtn::after,
+#loadBtn::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+button:active::after,
+.select-wrapper button:active::after,
+#predictBtn:active::after,
+#loadBtn:active::after {
+  animation: rippleEffect 0.6s linear;
+}
+
+@keyframes rippleEffect {
+  from {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(15);
+    opacity: 0;
+  }
+}
+
+/* === Select Fields === */
+.select-wrapper select {
+  appearance: none;
+  background: #0a1128;
+  border: 2px solid #4a90ff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  min-width: 180px;
+  transition: all 0.25s ease;
+}
+
+.select-wrapper select:hover {
+  border-color: #66b0ff;
+  background: #0d1a3a;
+}
+
+.select-wrapper select:focus {
+  outline: none;
+  border-color: #66b0ff;
+  box-shadow: 0 0 0 3px rgba(102, 176, 255, 0.2);
+}
+
+/* === Hover and Press Effects === */
+button:hover,
+.select-wrapper button:hover,
+#predictBtn:hover,
+#loadBtn:hover {
+  background: #5aa4ff;
+  transform: translateY(-2px);
+}
+
+button:focus,
+.select-wrapper button:focus,
+#predictBtn:focus,
+#loadBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 176, 255, 0.25);
+}
+
+button:active,
+.select-wrapper button:active,
+#predictBtn:active,
+#loadBtn:active {
+  transform: scale(0.97);
+}
+
+/* === Make Ripple Appear from Click Location === */
+button,
+.select-wrapper button,
+#predictBtn,
+#loadBtn {
+  --ripple-x: 50%;
+  --ripple-y: 50%;
+}
+button:active::after,
+.select-wrapper button:active::after,
+#predictBtn:active::after,
+#loadBtn:active::after {
+  top: var(--ripple-y);
+  left: var(--ripple-x);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-content {
+  background: #111827;
+  border-radius: 10px;
+  padding: 20px;
+  width: 340px;
+  box-shadow: 0 0 20px #4a90ff66;
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.modal-content {
+  pointer-events: auto;
+}
+
+.modal {
+  pointer-events: all;
+}
 
 
